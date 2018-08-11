@@ -130,14 +130,16 @@ def Combine_it_at_the_same_time():
     df = convert_tweet_to_data_frame(my_tweet).head(30)
     # 「.drop」で要素を削除。「axis=0」なら行、1なら列
     df_drop = df.drop("text_list", axis=1)
+    df.drop(df.index[df.fav_count == 0], axis=0, inplace=True)
     # 「.set_index()」で指定したcolumnがindexに変換
     df_i = df_drop.set_index('datetime')
     # 日付がindexの時に使える？
     # 「.resample()」で、引数に指定した内容（日付、月毎等）でまとめて「.sum()」でcolumnを合計
     df_t = df_i.resample("D").sum()
-    df_t.index.format()
-    df_t.plot.bar(color=['#348ABD', '#7A68A6', '#A60628'])
-    # print(graph)
+    # 縦のグラフ「kind='bar'」横のグラフ「kind='barh'」
+    df_t.plot(kind='bar')
+    plt.show()
+    plt.savefig("{}/image.png".format(path))
 
 
 if __name__ == "__main__":
